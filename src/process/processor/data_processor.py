@@ -1,17 +1,18 @@
 from collections import deque
+from collections.abc import Mapping
 import os
 from pathlib import Path
 
-from process.input.config_reader import ConfigData
-from process.processor.processors import Processor
+from input.config_reader import ConfigData
+from processor.processors import Processor
 
 
 class DataProcessor:
-    __slots__ = '_config', '_processor'
+    __slots__ = '_config', '_processors'
 
-    def __init__(self, *, config: ConfigData, processor: Processor):
+    def __init__(self, *, config: ConfigData, processors: Mapping[str, Processor]):
         self._config = config
-        self._processor = processor
+        self._processors = processors
 
     def process_all(self):
         # Exhaust the generator in the fastest way possible
@@ -19,23 +20,27 @@ class DataProcessor:
     
     def _process_generator(self):
         for source in self._config.sources:
-            for dirpath, _, filenames in os.walk(source):
+            input_directory = source.directory
+            output_directory = source.output
+            processor_key = source.processor
+            for dirpath, _, filenames in os.walk(input_directory):
                 for filename in filenames:
                     # Generate appropriate filepaths
                     current_filepath = os.path.abspath(os.curdir)
                     full_filepath = os.path.join(current_filepath, dirpath, filename)
-                    relative_filepath = os.path.relpath(full_filepath, source)
-                    output_filepath = os.path.join(current_filepath, self._config.output, relative_filepath)
+                    relative_filepath = os.path.relpath(full_filepath, input_directory)
+                    output_filepath = os.path.join(current_filepath, output_directory, relative_filepath)
                     output_dirpath = os.path.normpath(os.path.join(output_filepath, ".."))
 
-                    with open(full_filepath, "r") as f:
-                        content = f.read()
 
                     try:
                         Path(output_dirpath).mkdir(parents=True, exist_ok=True)
 
-                        # Dispatch processor
-                        output = self._processor.process(content)
+                        processor = self._processors[processor_key]
+
+                        with open(full_filepath, "r") as f:
+                            # Dispatch processor
+                            output = processor.process(f)
 
                         with open(output_filepath, "w+") as f:
                             f.write(output)

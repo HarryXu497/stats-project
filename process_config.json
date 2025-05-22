@@ -1,6 +1,12 @@
 {
-    "sources": [
-        "data/raw"
-    ],
-    "output": "data/processed"
+    "sources": {
+        "data/hpi/raw": {
+            "processor": "HPIProcessor",
+            "output": "data/hpi/processed"
+        },
+        "data/listings/raw": {
+            "processor": "ListingsProcessor",
+            "output": "data/listings/processed"
+        }
+    }
 }
