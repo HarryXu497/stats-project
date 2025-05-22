@@ -1,12 +1,12 @@
 
 from display.display import AnalysisDisplay
 from input.data_reader import DataReader
-from input.analysis_config_reader import AnalysisConfigReader
+from input.config_reader import ConfigReader
 
 
 def main():
     with open("analysis_config.json") as config_file:
-        reader = AnalysisConfigReader(config_file)
+        reader = ConfigReader(config_file)
 
     data_reader = DataReader(
         config=reader.config,

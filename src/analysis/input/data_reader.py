@@ -1,12 +1,10 @@
-
-import csv
 from dataclasses import dataclass
 import os
 from pathlib import Path
 import typing
 import pandas as pd
 
-from input.analysis_config_reader import _AnalysisConfig
+from input.config_reader import ConfigData
 
 _month_to_index = {
     "january": 0,
@@ -24,7 +22,9 @@ _month_to_index = {
 }
 
 class DataReader:
-    def __init__(self, config: _AnalysisConfig):
+    __slots__ = '_config'
+
+    def __init__(self, config: ConfigData):
         self._config = config
     
     def read_all(self):

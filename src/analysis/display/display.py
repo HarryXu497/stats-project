@@ -5,6 +5,8 @@ from input.data_reader import _MonthlyData
 
 
 class AnalysisDisplay:
+    __slots__ = '_data'
+    
     def __init__(self, data: list[_MonthlyData]):
         self._data = data
     

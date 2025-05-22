@@ -1,4 +1,9 @@
-from processor.processor import Processor
+from abc import ABC, abstractmethod
+
+class Processor(ABC):
+    @abstractmethod
+    def process(self, content: str):
+        pass
 
 
 class SpaceSeparatedTextNoLabelProcessor(Processor):

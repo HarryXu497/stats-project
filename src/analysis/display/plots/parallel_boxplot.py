@@ -21,6 +21,8 @@ _index_to_short_month = {
 
 
 class ParallelBoxplot:
+    __slots__ = '_data', '_processed_data'
+
     def __init__(self, data: list[_MonthlyData]):
         self._data = data
         self._processed_data = self._process()

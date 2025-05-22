@@ -1,12 +1,12 @@
 
 from processor.data_processor import DataProcessor
-from input.process_config_reader import ProcessConfigReader
+from process.input.config_reader import ConfigReader
 from processor.processors import SpaceSeparatedTextNoLabelProcessor
 
 
 def main():
     with open("process_config.json") as config_file:
-        reader = ProcessConfigReader(config_file)
+        reader = ConfigReader(config_file)
 
     processor = DataProcessor(
         config=reader.config,

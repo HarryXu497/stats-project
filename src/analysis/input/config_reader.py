@@ -3,11 +3,13 @@ import json
 import typing
 
 
-class AnalysisConfigReader:
+class ConfigReader:
+    __slots__ = '_config_dict'
+    
     def __init__(self, source: typing.TextIO):
         config_dict = json.load(source)
 
-        self._config_dict = _AnalysisConfig(
+        self._config_dict = ConfigData(
             sources=tuple(config_dict["sources"]),
         )
 
@@ -18,5 +20,5 @@ class AnalysisConfigReader:
         return self._config_dict
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class _AnalysisConfig:
+class ConfigData:
     sources: tuple[str]

@@ -3,11 +3,13 @@ import json
 import typing
 
 
-class ProcessConfigReader:
+class ConfigReader:
+    __slots__ = '_config_dict'
+    
     def __init__(self, source: typing.TextIO):
         config_dict = json.load(source)
 
-        self._config_dict = _ProcessConfig(
+        self._config_dict = ConfigData(
             sources=tuple(config_dict["sources"]),
             output=str(config_dict["output"]),
         )
@@ -19,6 +21,6 @@ class ProcessConfigReader:
         return self._config_dict
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class _ProcessConfig:
+class ConfigData:
     sources: tuple[str]
     output: str
