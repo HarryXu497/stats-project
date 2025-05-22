@@ -1,0 +1,6 @@
+{
+    "sources": [
+        "data/raw"
+    ],
+    "output": "data/processed"
+}
