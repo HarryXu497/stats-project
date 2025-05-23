@@ -1,9 +1,10 @@
 from collections.abc import Sequence
+from pathlib import Path
 import matplotlib as plt
 from matplotlib.figure import Figure
 import seaborn as sns
 import pandas as pd
-from input.data_reader import _MonthlyData
+from input.data_reader import Data, MonthlyHousingData
 
 _index_to_short_month = {
     0: "jan",
@@ -24,46 +25,61 @@ _index_to_short_month = {
 class ParallelBoxplot:
     __slots__ = '_data', '_processed_data'
 
-    def __init__(self, data: Sequence[_MonthlyData]):
+    def __init__(self, data: Data):
         self._data = data
         self._processed_data = self._process()
     
     def _process(self):
-        return [(column, self._process_column(column)) for column in _MonthlyData.col_names[1:]]
+        return [(column, self._process_column(column)) for column in MonthlyHousingData.col_names[1:]]
 
     def _process_column(self, col_name: str):
-        entries: list[tuple[int, int, float]] = []
+        entries: Sequence[pd.DataFrame] = []
 
-        for monthly_data in self._data:
+        for monthly_data in self._data.monthly_housing_data:
             df = monthly_data.data
+            
+            series: pd.Series = df[col_name].dropna()
 
-            series = df[col_name].dropna()
+            # Extract the District Code from the string "Toronto <CODE>"
             series = series[series != "-"]
             series = series.astype(float)
             series = series[series != 0]
 
+            series = series.rename("hpi")
+            df = series.to_frame()
+            df = df.assign(year=monthly_data.year, short_month=monthly_data.month)
 
-            for value in series.array:
-                entries.append((monthly_data.year, monthly_data.month, value))
+            entries.append(df)
 
-        entries.sort()
+        df = pd.concat(entries)
+        df = df.sort_values(by=["year", "short_month"])
+        df["short_month"] = df["short_month"].apply(lambda x: _index_to_short_month[x])
+        df = df.assign(month=df['short_month'] + " " + df['year'].astype(str))
 
-        return pd.DataFrame(
-            data={
-                "month": [f"{_index_to_short_month[entry[1]]} {entry[0]}" for entry in entries],
-                "hpi": [entry[2] for entry in entries],
-            }
-        )
 
+        return df
     
-    def show(self):
+    def output(self, *, output_path: Path | str, show_display=False):
+        if not isinstance(output_path, Path):
+            output_path = Path(output_path)
+
         sns.set_theme()
         for column, data in self._processed_data:
+            title = f"Parallel Boxplots of {column} vs. Month"
+
+            filepath = output_path / f"{title}.png"
+
             fig: Figure = plt.pyplot.figure()
             axes = sns.boxplot(data=data, x="month", y="hpi")
             axes.tick_params(axis='x', rotation=90, labelsize=8)
-            axes.set_title(f"Parallel Boxplots of {column} vs. Month")
+            axes.set_title(title)
+            fig.set_size_inches(26, 14)
+            # fig.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
 
-            fig.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
+            plt.pyplot.savefig(filepath)
 
-        plt.pyplot.show() 
+            if not show_display:
+                plt.pyplot.close()
+
+        if show_display:
+            plt.pyplot.show() 

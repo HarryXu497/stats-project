@@ -1,9 +1,15 @@
 {
-    "sources": [
-        "data/hpi/processed"
-    ],
+    "sources": {
+        "data/hpi/processed": {
+            "transformer": "HPITransformer"
+        },
+        "data/listings/processed": {
+            "transformer": "ListingsTransformer"
+        }
+    },
     "output": {
         "ParallelBoxplot": "output/parallel_boxplot",
-        "Histogram": "output/histogram"
+        "Histogram": "output/histogram",
+        "Scatterplot": "output/scatterplot"
     }
 }
