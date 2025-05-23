@@ -61,6 +61,8 @@ class Histogram:
 
         return pd.DataFrame(
             data={
+                # For 2 year periods
+                # "year": [f"{entry[0] - 1}-{entry[0]}" if entry[0] % 2 == 1 else f"{entry[0]}-{entry[0] + 1}" for entry in entries],
                 "year": [entry[0] for entry in entries],
                 "hpi": [entry[1] for entry in entries],
             }
@@ -69,27 +71,10 @@ class Histogram:
     def show(self):
         sns.set_theme()
         g = sns.FacetGrid(self._processed_data, row="htype", col="year", margin_titles=True)
-        g.map(sns.histplot, "hpi", fill=True)
+        g.map(sns.histplot, "hpi")
         g.tight_layout()
-        g.figure.subplots_adjust( left=None, bottom=None,  right=None, top=None, wspace=None, hspace=None)
-        # for ax in g.axes.flat:
-        #     # get the current title
-        #     title = ax.get_title()
-        #     # set the title and rotate the text
-        #     ax.set_title(title, rotation=90)
+        # g.figure.subplots_adjust(left=None, bottom=None,  right=None, top=None, wspace=None, hspace=None)
 
-
-
-
-
-        # for column, data in self._processed_data:
-
-            # fig: Figure = plt.pyplot.figure()
-            # axes = sns.boxplot(data=data, x="month", y="hpi")
-            # axes.tick_params(axis='x', rotation=90, labelsize=8)
-            # axes.set_title(f"Parallel Boxplots of {column} vs. Month")
-
-            # fig.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
-
+        # TODO: TEMP 
         plt.pyplot.savefig("test.png")
         # plt.pyplot.show() 
