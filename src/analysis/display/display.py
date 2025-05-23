@@ -1,6 +1,7 @@
 
 
 from collections.abc import Sequence
+from display.plots.histogram import Histogram
 from display.plots.parallel_boxplot import ParallelBoxplot
 from input.data_reader import _MonthlyData
 
@@ -13,4 +14,5 @@ class AnalysisDisplay:
     
     def show(self):
         # TODO: temp
-        ParallelBoxplot(self._data).show()
+        # ParallelBoxplot(self._data).show()
+        Histogram(self._data).show()

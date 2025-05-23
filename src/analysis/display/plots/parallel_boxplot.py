@@ -57,7 +57,6 @@ class ParallelBoxplot:
 
     
     def show(self):
-        # print(self._processed_data)
         sns.set_theme()
         for column, data in self._processed_data:
             fig: Figure = plt.pyplot.figure()

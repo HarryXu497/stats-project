@@ -1,5 +1,9 @@
 {
     "sources": [
-        "data/processed"
-    ]
+        "data/hpi/processed"
+    ],
+    "output": {
+        "ParallelBoxplot": "output/parallel_boxplot",
+        "Histogram": "output/histogram"
+    }
 }
