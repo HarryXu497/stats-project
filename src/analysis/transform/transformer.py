@@ -37,15 +37,19 @@ class HPITransformer(Transformer):
         return MonthlyHousingData(
             year=year,
             month=month,
-            data=data
+            data=data,
         )
 
 class ListingsTransformer(Transformer):
     def transform(self, filepath: Path):
+        year = int(filepath.parts[-2])
+        month = _month_to_index[filepath.stem]
         data = pd.read_csv(filepath)
             
         return ListingCountsData(
-            data=data
+            year=year,
+            month=month,
+            data=data,
         )
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -109,4 +113,6 @@ class MonthlyHousingData:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class ListingCountsData:
+    year: int
+    month: int
     data: pd.DataFrame

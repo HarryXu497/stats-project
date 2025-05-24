@@ -20,8 +20,6 @@ class ConfigReader:
             output=config_dict["output"]
         )
 
-        print(self._config_dict)
-
         # TODO: validate
 
     @property

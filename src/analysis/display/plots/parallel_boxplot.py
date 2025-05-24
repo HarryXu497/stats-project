@@ -47,14 +47,14 @@ class ParallelBoxplot:
 
             series = series.rename("hpi")
             df = series.to_frame()
-            df = df.assign(year=monthly_data.year, short_month=monthly_data.month)
+            df = df.assign(year=monthly_data.year, numeric_month=monthly_data.month)
 
             entries.append(df)
 
         df = pd.concat(entries)
-        df = df.sort_values(by=["year", "short_month"])
-        df["short_month"] = df["short_month"].apply(lambda x: _index_to_short_month[x])
-        df = df.assign(month=df['short_month'] + " " + df['year'].astype(str))
+        df = df.sort_values(by=["year", "numeric_month"])
+        df["numeric_month"] = df["numeric_month"].apply(lambda x: _index_to_short_month[x])
+        df = df.assign(month=df['numeric_month'] + " " + df['year'].astype(str))
 
 
         return df
