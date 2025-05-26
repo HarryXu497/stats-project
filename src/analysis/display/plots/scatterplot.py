@@ -1,6 +1,7 @@
 from pathlib import Path
 import pandas as pd 
 import seaborn as sns
+import scipy as sp
 import matplotlib.pyplot as plt
 from collections.abc import Sequence
 from display.plots.display import Display
@@ -100,11 +101,21 @@ class Scatterplot(Display):
 
         sns.set_theme()
         g = sns.lmplot(self._processed_data, x="hpi", y="counts", row="month", col="htype")
+
+        def annotate(data, **kwargs):
+            r, p = sp.stats.pearsonr(data['hpi'], data['counts'])
+            ax = plt.gca()
+            ax.text(.05, .8, 'r={:.2f}, p={:.2g}'.format(r, p),
+                    transform=ax.transAxes)
+            
+        g.map_dataframe(annotate)
+
         g.tight_layout()
 
         title = f"Relational Plot of HPI vs. Airbnb Listing Counts by Month and Housing Type"
         filepath = output_path / f"{title}.png"
-        g.figure.suptitle(title)
+        g.figure.subplots_adjust(top=0.95)
+        g.figure.suptitle(title, fontsize=48)
 
         plt.savefig(filepath)
 

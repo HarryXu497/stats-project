@@ -72,9 +72,8 @@ class ParallelBoxplot:
             fig: Figure = plt.pyplot.figure()
             axes = sns.boxplot(data=data, x="month", y="hpi")
             axes.tick_params(axis='x', rotation=90, labelsize=8)
-            axes.set_title(title)
+            axes.set_title(title, fontsize=48)
             fig.set_size_inches(26, 14)
-            # fig.subplots_adjust(left=0.05, right=0.95, top=0.9, bottom=0.1)
 
             plt.pyplot.savefig(filepath)
 

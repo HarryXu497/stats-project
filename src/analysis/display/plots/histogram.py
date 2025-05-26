@@ -62,7 +62,8 @@ class Histogram(Display):
 
         title = f"Distribution of HPI by Year and Housing Type"
         filepath = output_path / f"{title}.png"
-        g.figure.suptitle(title)
+        g.figure.subplots_adjust(top=0.95)
+        g.figure.suptitle(title, fontsize=48)
 
         plt.pyplot.savefig(filepath)
 
