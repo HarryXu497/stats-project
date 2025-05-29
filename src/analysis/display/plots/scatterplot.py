@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 import pandas as pd 
 import seaborn as sns
@@ -6,14 +7,6 @@ import matplotlib.pyplot as plt
 from collections.abc import Sequence
 from display.plots.display import Display
 from input.data_reader import Data, MonthlyHousingData
-
-_housing_type_map = {
-    "composite_hpi": "cmp",
-    "single_family_detached_hpi": "sfd",
-    "single_family_attached_hpi": "sfa",
-    "townhouse_hpi": "twn",
-    "apartment_hpi": "apt",
-}
 
 _index_to_short_month = {
     0: "jan",
@@ -47,6 +40,8 @@ class Scatterplot(Display):
         
         joined_data = joined_data.sort_values(by=["year", "numeric_month"])
         joined_data = joined_data.assign(month=joined_data["numeric_month"].apply(lambda x: _index_to_short_month[x]) + " " + joined_data['year'].astype(str))
+
+        # joined_data["counts"] = joined_data["counts"].apply(lambda x: math.log(x, 10))
 
         return joined_data
 
@@ -82,7 +77,7 @@ class Scatterplot(Display):
             })
             df = df[df[col_name] != 0]
 
-            df = df.assign(numeric_month=monthly_data.month, year=monthly_data.year, htype=_housing_type_map[col_name])
+            df = df.assign(numeric_month=monthly_data.month, year=monthly_data.year)
             df = df.rename(columns={ col_name: "hpi" })
 
             entries.append(df)
@@ -90,7 +85,7 @@ class Scatterplot(Display):
         df = pd.concat(entries)
         df = df.sort_values(by=['year', 'numeric_month'])
 
-        df = df.groupby(['area', 'numeric_month', 'year', 'htype']).median(numeric_only=True)
+        df = df.groupby(['area', 'numeric_month', 'year']).median(numeric_only=True)
         df = df.reset_index()
 
         return df
@@ -100,22 +95,22 @@ class Scatterplot(Display):
             output_path = Path(output_path)
 
         sns.set_theme()
-        g = sns.lmplot(self._processed_data, x="hpi", y="counts", row="month", col="htype")
+        g = sns.lmplot(self._processed_data, x="counts", y="hpi", row="month")
 
         def annotate(data, **kwargs):
-            r, p = sp.stats.pearsonr(data['hpi'], data['counts'])
+            r, p = sp.stats.pearsonr(data['counts'], data['hpi'])
             ax = plt.gca()
-            ax.text(.05, .8, 'r={:.2f}, p={:.2g}'.format(r, p),
+            ax.text(0.05, .90, 'r={:.2f}, p={:.2g}'.format(r, p),
                     transform=ax.transAxes)
             
         g.map_dataframe(annotate)
 
         g.tight_layout()
 
-        title = f"Relational Plot of HPI vs. Airbnb Listing Counts by Month and Housing Type"
+        title = f"Relational Plot of Airbnb Listing Counts vs. HPI by Month"
         filepath = output_path / f"{title}.png"
-        g.figure.subplots_adjust(top=0.95)
-        g.figure.suptitle(title, fontsize=48)
+        g.figure.subplots_adjust(top=0.93)
+        g.figure.suptitle(title, fontsize=36, wrap=True)
 
         plt.savefig(filepath)
 
