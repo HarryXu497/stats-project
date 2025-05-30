@@ -10,6 +10,7 @@
     "output": {
         "ParallelBoxplot": "output/parallel_boxplot",
         "Histogram": "output/histogram",
-        "Scatterplot": "output/scatterplot"
+        "Scatterplot": "output/scatterplot",
+        "ResidualsPlot": "output/residuals"
     }
 }

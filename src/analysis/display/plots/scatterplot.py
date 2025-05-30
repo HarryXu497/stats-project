@@ -97,7 +97,7 @@ class Scatterplot(Display):
         sns.set_theme()
         g = sns.lmplot(self._processed_data, x="counts", y="hpi", row="month")
 
-        def annotate(data, **kwargs):
+        def annotate(data, **_):
             r, p = sp.stats.pearsonr(data['counts'], data['hpi'])
             ax = plt.gca()
             ax.text(0.05, .90, 'r={:.2f}, p={:.2g}'.format(r, p),
@@ -107,10 +107,11 @@ class Scatterplot(Display):
 
         g.tight_layout()
 
-        title = f"Relational Plot of Airbnb Listing Counts vs. HPI by Month"
+        title = f"Relational Plot of Airbnb Listing Counts vs. HPI by Month, with Outliers"
         filepath = output_path / f"{title}.png"
-        g.figure.subplots_adjust(top=0.93)
+        g.figure.subplots_adjust(top=0.90)
         g.figure.suptitle(title, fontsize=36, wrap=True)
+        g.figure.set_size_inches(5, 36)
 
         plt.savefig(filepath)
 

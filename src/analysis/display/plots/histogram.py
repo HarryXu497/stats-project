@@ -58,7 +58,6 @@ class Histogram(Display):
         sns.set_theme()
         g = sns.FacetGrid(self._processed_data, row="year", col="htype", margin_titles=True)
         g.map(sns.histplot, "hpi")
-        g.tight_layout()
 
         title = f"Distribution of HPI by Year and Housing Type"
         filepath = output_path / f"{title}.png"

@@ -1,4 +1,5 @@
 
+from display.plots.residuals_plot import ResidualsPlot
 from transform.transformer import HPITransformer, ListingsTransformer
 from display.plots.scatterplot import Scatterplot
 from display.plots.histogram import Histogram
@@ -26,7 +27,8 @@ def main():
         display_registry={
             "ParallelBoxplot": ParallelBoxplot,
             "Histogram": Histogram,
-            "Scatterplot": Scatterplot
+            "Scatterplot": Scatterplot,
+            "ResidualsPlot": ResidualsPlot
         }
     )
 
