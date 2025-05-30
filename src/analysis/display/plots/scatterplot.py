@@ -30,18 +30,18 @@ class Scatterplot(Display):
         self._processed_data = self._process()
     
     def _process(self):
-        processed_data =  [self._process_column(column) for column in MonthlyHousingData.col_names[1:]]
-        concatenated_data = pd.concat(processed_data)
+        data = self._process_column("composite_hpi")
+
 
         listing_data = self._process_listings()
 
-        joined_data = (concatenated_data.merge(listing_data, left_on=['area', 'numeric_month', 'year'], right_on=['district', 'numeric_month', 'year'])
+        joined_data = (data.merge(listing_data, left_on=['area', 'numeric_month', 'year'], right_on=['district', 'numeric_month', 'year'])
           .reindex())
         
         joined_data = joined_data.sort_values(by=["year", "numeric_month"])
         joined_data = joined_data.assign(month=joined_data["numeric_month"].apply(lambda x: _index_to_short_month[x]) + " " + joined_data['year'].astype(str))
 
-        # joined_data["counts"] = joined_data["counts"].apply(lambda x: math.log(x, 10))
+        # joined_data["counts"] = joined_data["counts"].apply(lambda x: math.sqrt(x))
 
         return joined_data
 
@@ -80,6 +80,7 @@ class Scatterplot(Display):
             df = df.assign(numeric_month=monthly_data.month, year=monthly_data.year)
             df = df.rename(columns={ col_name: "hpi" })
 
+
             entries.append(df)
 
         df = pd.concat(entries)
@@ -107,7 +108,7 @@ class Scatterplot(Display):
 
         g.tight_layout()
 
-        title = f"Relational Plot of Airbnb Listing Counts vs. HPI by Month, with Outliers"
+        title = f"Relational Plot of Airbnb Listing Counts vs. Composite HPI by Month, with Outliers"
         filepath = output_path / f"{title}.png"
         g.figure.subplots_adjust(top=0.90)
         g.figure.suptitle(title, fontsize=36, wrap=True)
