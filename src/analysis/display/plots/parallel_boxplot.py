@@ -67,7 +67,10 @@ class ParallelBoxplot:
         for column, data in self._processed_data:
             title = f"Parallel Boxplots of {column} vs. Month"
 
-            filepath = output_path / f"{title}.png"
+            img_filepath = output_path / f"{title}.png"
+            csv_filepath = output_path / f"{title}.csv"
+
+            # data[["month", "hpi"]].groupby(by=["month"]).describe().to_csv(csv_filepath)
 
             fig: Figure = plt.pyplot.figure()
             axes = sns.boxplot(data=data, x="month", y="hpi")
@@ -75,7 +78,7 @@ class ParallelBoxplot:
             axes.set_title(title, fontsize=48)
             fig.set_size_inches(26, 14)
 
-            plt.pyplot.savefig(filepath)
+            plt.pyplot.savefig(img_filepath)
 
             if not show_display:
                 plt.pyplot.close()

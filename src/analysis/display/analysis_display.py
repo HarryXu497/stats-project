@@ -16,7 +16,7 @@ class AnalysisDisplay:
         self._config = config
         self._display_registry = display_registry
     
-    def output(self):
+    def output(self, *, show_display=False):
         for display_key, output_directory in self._config.output.items():
             display_callable = self._display_registry[display_key]
             display = display_callable(self._data)
@@ -30,7 +30,7 @@ class AnalysisDisplay:
 
             display.output(
                 output_path=full_directory_path,
-                show_display=False,
+                show_display=show_display,
             )
 
 
