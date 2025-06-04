@@ -32,9 +32,4 @@ class AnalysisDisplay:
                 output_path=full_directory_path,
                 show_display=show_display,
             )
-
-
-
-        # ParallelBoxplot(self._data).output()
-        # Histogram(self._data).output()
         
