@@ -21,8 +21,8 @@ class ResidualsPlot(Display):
 
         g.tight_layout()
 
-        title = f"Residuals Plot of Airbnb Listing Counts vs. Composite HPI by Month, with Outliers"
-        filepath = output_path / f"{title}.png"
+        title = f"Residuals Plot of sqrt(Airbnb Listing Counts) vs. Composite HPI by Month"
+        filepath = output_path / f"{title}.pdf"
         g.figure.subplots_adjust(top=0.90)
         g.figure.suptitle(title, fontsize=36, wrap=True)
         g.figure.set_size_inches(5, 36)

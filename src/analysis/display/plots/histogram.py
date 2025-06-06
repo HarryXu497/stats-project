@@ -60,7 +60,7 @@ class Histogram(Display):
         g.map(sns.histplot, "hpi")
 
         title = f"Distribution of HPI by Year and Housing Type"
-        filepath = output_path / f"{title}.png"
+        filepath = output_path / f"{title}.pdf"
         g.figure.subplots_adjust(top=0.95)
         g.figure.suptitle(title, fontsize=48)
 

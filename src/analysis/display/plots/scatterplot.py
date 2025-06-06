@@ -41,7 +41,7 @@ class Scatterplot(Display):
         joined_data = joined_data.sort_values(by=["year", "numeric_month"])
         joined_data = joined_data.assign(month=joined_data["numeric_month"].apply(lambda x: _index_to_short_month[x]) + " " + joined_data['year'].astype(str))
 
-        # joined_data["counts"] = joined_data["counts"].apply(lambda x: math.sqrt(x))
+        joined_data["counts"] = joined_data["counts"].apply(lambda x: math.sqrt(x))
 
         return joined_data
 
@@ -101,15 +101,16 @@ class Scatterplot(Display):
         def annotate(data, **_):
             r, p = sp.stats.pearsonr(data['counts'], data['hpi'])
             ax = plt.gca()
-            ax.text(0.05, .90, 'r={:.2f}, p={:.2g}'.format(r, p),
+            ax.text(0.05, .90, 'r={:.2f}, R^2={:.2g}, p={:.2g}'.format(r, r * r, p),
                     transform=ax.transAxes)
             
         g.map_dataframe(annotate)
 
         g.tight_layout()
 
-        title = f"Relational Plot of Airbnb Listing Counts vs. Composite HPI by Month, with Outliers"
-        filepath = output_path / f"{title}.png"
+        title = f"Relational Plot of sqrt(Airbnb Listing Counts) vs. Composite HPI by Month"
+        
+        filepath = output_path / f"{title}.pdf"
         g.figure.subplots_adjust(top=0.90)
         g.figure.suptitle(title, fontsize=36, wrap=True)
         g.figure.set_size_inches(5, 36)

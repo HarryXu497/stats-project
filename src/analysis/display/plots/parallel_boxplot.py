@@ -53,8 +53,8 @@ class ParallelBoxplot:
 
         df = pd.concat(entries)
         df = df.sort_values(by=["year", "numeric_month"])
-        df["numeric_month"] = df["numeric_month"].apply(lambda x: _index_to_short_month[x])
-        df = df.assign(month=df['numeric_month'] + " " + df['year'].astype(str))
+        df["short_month"] = df["numeric_month"].apply(lambda x: _index_to_short_month[x])
+        df = df.assign(month=df['short_month'] + " " + df['year'].astype(str))
 
 
         return df
@@ -67,10 +67,18 @@ class ParallelBoxplot:
         for column, data in self._processed_data:
             title = f"Parallel Boxplots of {column} vs. Month"
 
-            img_filepath = output_path / f"{title}.png"
+            img_filepath = output_path / f"{title}.pdf"
             csv_filepath = output_path / f"{title}.csv"
 
-            # data[["month", "hpi"]].groupby(by=["month"]).describe().to_csv(csv_filepath)
+            # Write CSV File
+            csv_data = data[["month", "hpi", "year", "numeric_month"]]
+            csv_data = csv_data.groupby(by=["month", "year", "numeric_month"])
+            csv_data = csv_data.describe()
+            csv_data = csv_data.sort_values(by=["year", "numeric_month"])
+            csv_data = csv_data.round(2)
+            csv_data = csv_data.droplevel(axis=1, level=0).reset_index()
+            csv_data = csv_data.drop(columns=["year", "numeric_month"])
+            csv_data = csv_data.to_csv(csv_filepath, index=False)
 
             fig: Figure = plt.pyplot.figure()
             axes = sns.boxplot(data=data, x="month", y="hpi")
