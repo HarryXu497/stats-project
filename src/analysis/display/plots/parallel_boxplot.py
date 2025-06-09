@@ -76,9 +76,11 @@ class ParallelBoxplot:
             csv_data = csv_data.groupby(by=["month", "year", "numeric_month"])
             csv_data = csv_data.describe()
             csv_data = csv_data.sort_values(by=["year", "numeric_month"])
-            csv_data = csv_data.round(2)
             csv_data = csv_data.droplevel(axis=1, level=0).reset_index()
             csv_data = csv_data.drop(columns=["year", "numeric_month"])
+            csv_data = csv_data.assign(iqr=csv_data['75%'] - csv_data['25%'])
+            csv_data["iqr"] = csv_data["iqr"].astype(float)
+            csv_data = csv_data.round(2)
             csv_data = csv_data.to_csv(csv_filepath, index=False)
 
             fig: Figure = plt.pyplot.figure()

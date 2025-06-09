@@ -41,7 +41,7 @@ class Scatterplot(Display):
         joined_data = joined_data.sort_values(by=["year", "numeric_month"])
         joined_data = joined_data.assign(month=joined_data["numeric_month"].apply(lambda x: _index_to_short_month[x]) + " " + joined_data['year'].astype(str))
 
-        # joined_data["counts"] = joined_data["counts"].apply(lambda x: math.sqrt(x))
+        joined_data["counts"] = joined_data["counts"].apply(lambda x: math.log(x, 10))
 
         return joined_data
 
@@ -101,14 +101,15 @@ class Scatterplot(Display):
         def annotate(data, **_):
             r, p = sp.stats.pearsonr(data['counts'], data['hpi'])
             ax = plt.gca()
-            ax.text(0.05, .90, 'r={:.2f}, R^2={:.2g}, p={:.2g}'.format(r, r * r, p),
+            slope, intercept, r_value, p_value, std_err = sp.stats.linregress(data['counts'], data['hpi'])
+            ax.text(0.05, .90, 'r={:.2f}, R^2={:.2g}, p={:.2g}\n y={:.8f}x+{:.8f}'.format(r, r * r, p, slope, intercept),
                     transform=ax.transAxes)
             
         g.map_dataframe(annotate)
 
         g.tight_layout()
 
-        title = f"Relational Plot of Airbnb Listing Counts vs. Composite HPI by Month, with Outliers"
+        title = f"Relational Plot of log(Airbnb Listing Counts) vs. Composite HPI by Month"
         
         pdf_filepath = output_path / f"{title}.pdf"
         png_filepath = output_path / f"{title}.png"

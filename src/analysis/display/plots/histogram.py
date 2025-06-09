@@ -61,7 +61,20 @@ class Histogram(Display):
 
         title = f"Distribution of HPI by Year and Housing Type"
         png_filepath = output_path / f"{title}.png"
-        pdf_filepath = output_path / f"{title}.png"
+        pdf_filepath = output_path / f"{title}.pdf"
+        csv_filepath = output_path / f"{title}.csv"
+
+        # Write CSV File
+        csv_data = self._processed_data[["hpi", "year", "htype"]]
+        csv_data = csv_data.groupby(by=["year", "htype"])
+        csv_data = csv_data.describe()
+        csv_data = csv_data.sort_values(by=["year", "htype"])
+        csv_data = csv_data.droplevel(axis=1, level=0).reset_index()
+        csv_data = csv_data.assign(iqr=csv_data['75%'] - csv_data['25%'])
+        csv_data["iqr"] = csv_data["iqr"].astype(float)
+        csv_data = csv_data.round(2)
+        csv_data = csv_data.to_csv(csv_filepath, index=False)
+
         g.figure.subplots_adjust(top=0.7)
         g.figure.suptitle(title, fontsize=48)
 

@@ -21,7 +21,7 @@ class ResidualsPlot(Display):
 
         g.tight_layout()
 
-        title = f"Residuals Plot of Airbnb Listing Counts vs. Composite HPI by Month, with Outliers"
+        title = f"Residuals Plot of log(Airbnb Listing Counts) vs. Composite HPI by Month"
         pdf_filepath = output_path / f"{title}.pdf"
         png_filepath = output_path / f"{title}.png"
 
