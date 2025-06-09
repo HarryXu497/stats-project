@@ -41,7 +41,7 @@ class Scatterplot(Display):
         joined_data = joined_data.sort_values(by=["year", "numeric_month"])
         joined_data = joined_data.assign(month=joined_data["numeric_month"].apply(lambda x: _index_to_short_month[x]) + " " + joined_data['year'].astype(str))
 
-        joined_data["counts"] = joined_data["counts"].apply(lambda x: math.sqrt(x))
+        # joined_data["counts"] = joined_data["counts"].apply(lambda x: math.sqrt(x))
 
         return joined_data
 
@@ -108,14 +108,17 @@ class Scatterplot(Display):
 
         g.tight_layout()
 
-        title = f"Relational Plot of sqrt(Airbnb Listing Counts) vs. Composite HPI by Month"
+        title = f"Relational Plot of Airbnb Listing Counts vs. Composite HPI by Month, with Outliers"
         
-        filepath = output_path / f"{title}.pdf"
+        pdf_filepath = output_path / f"{title}.pdf"
+        png_filepath = output_path / f"{title}.png"
+
         g.figure.subplots_adjust(top=0.90)
         g.figure.suptitle(title, fontsize=36, wrap=True)
         g.figure.set_size_inches(5, 36)
 
-        plt.savefig(filepath)
+        plt.savefig(pdf_filepath)
+        plt.savefig(png_filepath)
 
         if show_display:
             plt.show() 

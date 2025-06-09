@@ -60,11 +60,13 @@ class Histogram(Display):
         g.map(sns.histplot, "hpi")
 
         title = f"Distribution of HPI by Year and Housing Type"
-        filepath = output_path / f"{title}.pdf"
-        g.figure.subplots_adjust(top=0.95)
+        png_filepath = output_path / f"{title}.png"
+        pdf_filepath = output_path / f"{title}.png"
+        g.figure.subplots_adjust(top=0.7)
         g.figure.suptitle(title, fontsize=48)
 
-        plt.pyplot.savefig(filepath)
+        plt.pyplot.savefig(png_filepath)
+        plt.pyplot.savefig(pdf_filepath)
 
         if show_display:
             plt.pyplot.show() 

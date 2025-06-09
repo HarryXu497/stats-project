@@ -67,7 +67,8 @@ class ParallelBoxplot:
         for column, data in self._processed_data:
             title = f"Parallel Boxplots of {column} vs. Month"
 
-            img_filepath = output_path / f"{title}.pdf"
+            png_filepath = output_path / f"{title}.png"
+            pdf_filepath = output_path / f"{title}.pdf"
             csv_filepath = output_path / f"{title}.csv"
 
             # Write CSV File
@@ -86,7 +87,8 @@ class ParallelBoxplot:
             axes.set_title(title, fontsize=48)
             fig.set_size_inches(26, 14)
 
-            plt.pyplot.savefig(img_filepath)
+            plt.pyplot.savefig(png_filepath)
+            plt.pyplot.savefig(pdf_filepath)
 
             if not show_display:
                 plt.pyplot.close()
