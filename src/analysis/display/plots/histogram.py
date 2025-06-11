@@ -44,7 +44,8 @@ class Histogram(Display):
             df = series.to_frame()
             df = df.assign(year=monthly_data.year, htype=_housing_type_map[col_name])
 
-            entries.append(df)
+            if monthly_data.year == 2012 or monthly_data.year == 2022: 
+                entries.append(df)
 
         df = pd.concat(entries)
         df = df.sort_values(by=["year"])
@@ -59,7 +60,7 @@ class Histogram(Display):
         g = sns.FacetGrid(self._processed_data, row="year", col="htype", margin_titles=True)
         g.map(sns.histplot, "hpi")
 
-        title = f"Distribution of HPI by Year and Housing Type"
+        title = f"Distribution of HPI by Housing Type, 2012 vs 2022"
         png_filepath = output_path / f"{title}.png"
         pdf_filepath = output_path / f"{title}.pdf"
         csv_filepath = output_path / f"{title}.csv"

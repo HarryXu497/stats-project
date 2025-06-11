@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from pathlib import Path
-import matplotlib as plt
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 import seaborn as sns
 import pandas as pd
@@ -49,7 +50,8 @@ class ParallelBoxplot:
             df = series.to_frame()
             df = df.assign(year=monthly_data.year, numeric_month=monthly_data.month)
 
-            entries.append(df)
+            if monthly_data.year == 2012 or monthly_data.year == 2022:
+                entries.append(df)
 
         df = pd.concat(entries)
         df = df.sort_values(by=["year", "numeric_month"])
@@ -64,8 +66,16 @@ class ParallelBoxplot:
             output_path = Path(output_path)
 
         sns.set_theme()
+        # plt.rcParams.update({'font.size': 24})
+        plt.rc('font', size=24)          # controls default text sizes
+        plt.rc('axes', titlesize=24)     # fontsize of the axes title
+        plt.rc('axes', labelsize=24)    # fontsize of the x and y labels
+        plt.rc('xtick', labelsize=24)    # fontsize of the tick labels
+        plt.rc('ytick', labelsize=24)    # fontsize of the tick labels
+        plt.rc('legend', fontsize=24)    # legend fontsize
+        plt.rc('figure', titlesize=24)  
         for column, data in self._processed_data:
-            title = f"Parallel Boxplots of {column} vs. Month"
+            title = f"Parallel Boxplots of {column}, 2012 vs. 2022"
 
             png_filepath = output_path / f"{title}.png"
             pdf_filepath = output_path / f"{title}.pdf"
@@ -83,17 +93,17 @@ class ParallelBoxplot:
             csv_data = csv_data.round(2)
             csv_data = csv_data.to_csv(csv_filepath, index=False)
 
-            fig: Figure = plt.pyplot.figure()
-            axes = sns.boxplot(data=data, x="month", y="hpi")
-            axes.tick_params(axis='x', rotation=90, labelsize=8)
-            axes.set_title(title, fontsize=48)
-            fig.set_size_inches(26, 14)
+            fig: Figure = plt.figure()
+            axes = sns.boxplot(data=data, x="year", y="hpi")
+            axes.tick_params(axis='x', labelsize=24)
+            # axes.set_title(title, fontsize=48)
+            fig.set_size_inches(12, 14)
 
-            plt.pyplot.savefig(png_filepath)
-            plt.pyplot.savefig(pdf_filepath)
+            plt.savefig(png_filepath)
+            plt.savefig(pdf_filepath)
 
             if not show_display:
-                plt.pyplot.close()
+                plt.close()
 
         if show_display:
-            plt.pyplot.show() 
+            plt.show() 
