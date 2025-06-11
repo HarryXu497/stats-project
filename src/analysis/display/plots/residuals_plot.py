@@ -21,13 +21,13 @@ class ResidualsPlot(Display):
 
         g.tight_layout()
 
-        title = f"Residuals Plot of log(Airbnb Listing Counts) vs. Composite HPI by Month"
+        title = f"Residuals Plot of log(Airbnb Listing Counts) vs. Composite HPI, April 2025"
         pdf_filepath = output_path / f"{title}.pdf"
         png_filepath = output_path / f"{title}.png"
 
-        g.figure.subplots_adjust(top=0.90)
-        g.figure.suptitle(title, fontsize=36, wrap=True)
-        g.figure.set_size_inches(5, 36)
+        g.figure.subplots_adjust(top=0.80)
+        g.figure.suptitle(title, fontsize=12, wrap=False)
+        # g.figure.set_size_inches(5, 36)
 
         plt.savefig(pdf_filepath)
         plt.savefig(png_filepath)

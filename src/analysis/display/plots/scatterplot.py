@@ -43,6 +43,8 @@ class Scatterplot(Display):
 
         joined_data["counts"] = joined_data["counts"].apply(lambda x: math.log(x, 10))
 
+        joined_data = joined_data[joined_data["month"] == "apr 2025"]
+
         return joined_data
 
     def _process_listings(self):
@@ -96,7 +98,7 @@ class Scatterplot(Display):
             output_path = Path(output_path)
 
         sns.set_theme()
-        g = sns.lmplot(self._processed_data, x="counts", y="hpi", row="month")
+        g = sns.lmplot(self._processed_data, x="counts", y="hpi")
 
         def annotate(data, **_):
             r, p = sp.stats.pearsonr(data['counts'], data['hpi'])
@@ -109,14 +111,14 @@ class Scatterplot(Display):
 
         g.tight_layout()
 
-        title = f"Relational Plot of log(Airbnb Listing Counts) vs. Composite HPI by Month"
+        title = f"Relational Plot of log(Airbnb Listing Counts) vs. Composite HPI, April 2025"
         
         pdf_filepath = output_path / f"{title}.pdf"
         png_filepath = output_path / f"{title}.png"
 
-        g.figure.subplots_adjust(top=0.90)
-        g.figure.suptitle(title, fontsize=36, wrap=True)
-        g.figure.set_size_inches(5, 36)
+        g.figure.subplots_adjust(top=0.70)
+        g.figure.suptitle(title, fontsize=24, wrap=True)
+        # g.figure.set_size_inches(5, 36)
 
         plt.savefig(pdf_filepath)
         plt.savefig(png_filepath)
